@@ -3,10 +3,8 @@ from langchain.chains import LLMChain
 from langchain.prompts import PromptTemplate
 
 def create_refactor_agent():
-    # Initialize the Gen AI client
     client = genai.Client(api_key=os.environ["GOOGLE_API_KEY"])
 
-    # Define the prompt template
     prompt = PromptTemplate(
         input_variables=["code", "language"],
         template=(
@@ -21,16 +19,13 @@ def create_refactor_agent():
         ),
     )
 
-    # Define a function to generate the refactored code
     def generate_refactored_code(inputs):
         response = client.models.generate_content(
             model='gemini-2.0-flash-thinking-exp',
             contents=prompt.format(**inputs)
         )
-        # Extract the refactored code from the response
         return response.result
 
-    # Create the LLMChain with the custom function
     chain = LLMChain(llm=generate_refactored_code, prompt=prompt)
     return chain
 
