@@ -36,11 +36,11 @@ def refactor_files(filesChanged):
         fil=open(file, "r")
         language=fil.name.split(".")[-1] 
         current_code=fil.read()
+        refactored_code=refactor_agent({"code":current_code,"language":language})
         fil.close()
     
         with open(file, "w") as file:
             print(f"File changed: {file}")
-            refactored_code=refactor_agent.run({"code":current_code,"language":language})
             stripped_code = clean_code(refactored_code)
             file.write(stripped_code.strip())
             print("\nRefactored Code:\n")
