@@ -64,7 +64,6 @@ def watch_directory(path,filesChanged):
 def main():
     parser = argparse.ArgumentParser(description="A CLI tool to watch file saves.")
     parser.add_argument("watch", type=str, help="The directory to watch: now")
-    parser.add_argument("refactor", type=str, help="Refactors all the changed files")
     args = parser.parse_args()
     changed_files_map=set()
     currentDirectory = os.getcwd()
