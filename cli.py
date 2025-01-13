@@ -5,12 +5,23 @@ import argparse
 import os
 from agent import create_refactor_agent
 import re
+import re
+
 def clean_code(agent_response):
     """
     Removes language wrappers like ```language ... ``` from the agent's returned code.
+    Handles multiple code blocks and ensures proper whitespace handling.
+
+    Args:
+        agent_response (str): The string containing code blocks wrapped in triple backticks.
+
+    Returns:
+        str: The cleaned code with all language wrappers removed.
     """
-    cleaned_code = re.sub(r"```[a-zA-Z]+\n", "", agent_response)  
-    cleaned_code = re.sub(r"```", "", cleaned_code)             
+    code_block_pattern = re.compile(r"```[a-zA-Z]*\n(.*?)```", re.DOTALL)
+    
+    cleaned_code = "\n".join(code_block_pattern.findall(agent_response))
+    
     return cleaned_code.strip()
 
 class FileSaveHandler(FileSystemEventHandler):
@@ -60,26 +71,26 @@ def watch_directory(path, filesChanged):
     observer.join()
 def refactor_cli_ascii_art():
     ascii_art = """
-    
-██████╗ ███████╗███████╗ █████╗  ██████╗ ████████╗ ██████╗ ██████╗ 
-██╔══██╗██╔════╝██╔════╝██╔══██╗██╔════╝ ╚══██╔══╝██╔═══██╗██╔══██╗
-██║  ██║█████╗  █████╗  ███████║██║  ███╗   ██║   ██║   ██║██████╔╝
-██║  ██║██╔══╝  ██╔══╝  ██╔══██║██║   ██║   ██║   ██║   ██║██╔═══╝ 
-██████╔╝███████╗███████╗██║  ██║╚██████╔╝   ██║   ╚██████╔╝██║     
-╚═════╝ ╚══════╝╚══════╝╚═╝  ╚═╝ ╚═════╝    ╚═╝    ╚═════╝ ╚═╝     
-Watching for changes in your codebase...                                                                  
+ ▄▄▄▄▄▄   ▄▄▄▄▄▄▄ ▄▄▄▄▄▄▄ ▄▄▄▄▄▄ ▄▄▄▄▄▄▄ ▄▄▄▄▄▄▄ ▄▄▄▄▄▄▄ ▄▄▄▄▄▄   
+█   ▄  █ █       █       █      █       █       █       █   ▄  █  
+█  █ █ █ █    ▄▄▄█    ▄▄▄█  ▄   █       █▄     ▄█   ▄   █  █ █ █  
+█   █▄▄█▄█   █▄▄▄█   █▄▄▄█ █▄█  █     ▄▄█ █   █ █  █ █  █   █▄▄█▄ 
+█    ▄▄  █    ▄▄▄█    ▄▄▄█      █    █    █   █ █  █▄█  █    ▄▄  █
+█   █  █ █   █▄▄▄█   █   █  ▄   █    █▄▄  █   █ █       █   █  █ █
+█▄▄▄█  █▄█▄▄▄▄▄▄▄█▄▄▄█   █▄█ █▄▄█▄▄▄▄▄▄▄█ █▄▄▄█ █▄▄▄▄▄▄▄█▄▄▄█  █▄█
+
+Ctrl + C to refactor files and exit.
+Made By: @paulfruitful
+.....Watching for changes in your codebase...                                                                  
     """
     print(ascii_art)
 
 def main():
-   
-  
-
-
+    refactor_cli_ascii_art()
     parser = argparse.ArgumentParser(description="A CLI tool to watch file saves.")
     parser.add_argument("watch", type=str, help="The directory to watch: now")
     args = parser.parse_args()
-    refactor_cli_ascii_art()
+   
 
     changed_files_map = set()
     currentDirectory = os.getcwd()

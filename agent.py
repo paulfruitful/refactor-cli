@@ -48,7 +48,7 @@ def create_refactor_agent():
             "Return only the refactored code with comments explaining the changes."
         ).format(**inputs)
 
-        model = genai.GenerativeModel('gemini-pro')  
+        model = genai.GenerativeModel('gemini-2.0-flash-thinking-exp-1219')  
         response = model.generate_content(prompt)
         return response.text
 
