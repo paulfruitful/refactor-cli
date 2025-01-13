@@ -2,8 +2,15 @@ import google.generativeai as genai
 import os
 from env import get_api_key
 
+
 def create_refactor_agent():
-    genai.configure(api_key=get_api_key())
+    api_key = os.environ.get("GOOGLE_API_KEY")
+    if not api_key:
+     print("Google API key not found in environment variables.")
+     return
+    else:
+      print("Google API key loaded successfully.")
+    genai.configure(api_key=api_key)
 
     def generate_refactored_code(inputs):
         prompt = (
