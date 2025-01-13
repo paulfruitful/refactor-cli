@@ -2,6 +2,8 @@
 conf.js
 a.py
 env.py
-/dist
 cli.spec
 /build
+refactorcli-installer.iss
+refactor-cli.spec
+/dist/cli.exe

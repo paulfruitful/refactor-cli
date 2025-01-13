@@ -5,10 +5,6 @@ import argparse
 import os
 from agent import create_refactor_agent
 import re
-import shutil
-import ctypes
-import winreg
-
 def clean_code(agent_response):
     """
     Removes language wrappers like ```language ... ``` from the agent's returned code.
@@ -62,69 +58,28 @@ def watch_directory(path, filesChanged):
         refactor_files(filesChanged)
         observer.stop()
     observer.join()
-
-def is_admin():
-    """Check if the script is running with administrator privileges."""
-    try:
-        return ctypes.windll.shell32.IsUserAnAdmin()
-    except:
-        return False
-
-def add_to_path(directory):
-    """Add a directory to the system PATH environment variable."""
-    try:
-        with winreg.ConnectRegistry(None, winreg.HKEY_LOCAL_MACHINE) as hkey:
-            with winreg.OpenKey(hkey, r"SYSTEM\CurrentControlSet\Control\Session Manager\Environment", 0, winreg.KEY_ALL_ACCESS) as sub_key:
-                path_value, _ = winreg.QueryValueEx(sub_key, "Path")
-                
-                if directory not in path_value:
-                    new_path_value = f"{path_value};{directory}" if path_value else directory
-                    winreg.SetValueEx(sub_key, "Path", 0, winreg.REG_EXPAND_SZ, new_path_value)
-                    print(f"Added {directory} to the system PATH.")
-                else:
-                    print(f"{directory} is already in the system PATH.")
-    except Exception as e:
-        print(f"Failed to update PATH: {e}")
-
-def move_exe_to_path(exe_path, target_dir):
-    """Move the executable to a directory in the PATH."""
-    try:
-        if not os.path.exists(target_dir):
-            os.makedirs(target_dir)
-            print(f"Created directory: {target_dir}")
-
-        exe_name = os.path.basename(exe_path)
-        target_path = os.path.join(target_dir, exe_name)
-        shutil.move(exe_path, target_path)
-        print(f"Moved {exe_name} to {target_dir}.")
-
-        add_to_path(target_dir)
-    except Exception as e:
-        print(f"Failed to move executable: {e}")
+def refactor_cli_ascii_art():
+    ascii_art = """
+    
+██████╗ ███████╗███████╗ █████╗  ██████╗ ████████╗ ██████╗ ██████╗ 
+██╔══██╗██╔════╝██╔════╝██╔══██╗██╔════╝ ╚══██╔══╝██╔═══██╗██╔══██╗
+██║  ██║█████╗  █████╗  ███████║██║  ███╗   ██║   ██║   ██║██████╔╝
+██║  ██║██╔══╝  ██╔══╝  ██╔══██║██║   ██║   ██║   ██║   ██║██╔═══╝ 
+██████╔╝███████╗███████╗██║  ██║╚██████╔╝   ██║   ╚██████╔╝██║     
+╚═════╝ ╚══════╝╚══════╝╚═╝  ╚═╝ ╚═════╝    ╚═╝    ╚═════╝ ╚═╝     
+Watching for changes in your codebase...                                                                  
+    """
+    print(ascii_art)
 
 def main():
    
-    if os.name == "nt":  
-        if not is_admin():
-            print("This script requires administrator privileges. Please run it as an administrator.")
-            time.sleep(5)
-            return
-
-        exe_path = os.path.join(os.getcwd(), "cli.exe")
-
-        target_dir = os.path.join(os.environ["ProgramFiles"], "RefactorCLI")
-
-        move_exe_to_path(exe_path, target_dir)
-
-        print("Installation complete. You can now run 'refactor-cli' from any terminal.")
-        time.sleep(5)
-
-    
+  
 
 
     parser = argparse.ArgumentParser(description="A CLI tool to watch file saves.")
     parser.add_argument("watch", type=str, help="The directory to watch: now")
     args = parser.parse_args()
+    refactor_cli_ascii_art()
 
     changed_files_map = set()
     currentDirectory = os.getcwd()
