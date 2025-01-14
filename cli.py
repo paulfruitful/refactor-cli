@@ -117,20 +117,45 @@ def refactor_cli_ascii_art():
 █   █  █ █   █▄▄▄█   █   █  ▄   █    █▄▄  █   █ █       █   █  █ █
 █▄▄▄█  █▄█▄▄▄▄▄▄▄█▄▄▄█   █▄█ █▄▄█▄▄▄▄▄▄▄█ █▄▄▄█ █▄▄▄▄▄▄▄█▄▄▄█  █▄█
 
-Ctrl + C to refactor files and exit.
-Made By: @paulfruitful
-.....Watching for changes in your codebase...                                                                  
+Made By: @paulfruitful                                                              
     """
     print(ascii_art)
-
 def main():
     refactor_cli_ascii_art()
     parser = argparse.ArgumentParser(description="A CLI tool to watch file saves.")
     parser.add_argument("watch", type=str, help="The directory to watch")
+    parser.add_argument('touch', type=str, help="To refactor a particular file")
     args = parser.parse_args()
+
+    if args.touch:
+        try:
+            with open(args.touch, 'r') as change_file:
+                language = change_file.name.split(".")[-1]
+                agent = create_refactor_agent()
+                print(f'.........Refactoring {args.touch}')
+                code = change_file.read()
+                refactor_code = agent({"code": code, "language": language})
+                refactored_code = clean_code(refactor_code)
+
+            if os.path.getsize(args.touch) < 200_000:
+                with open(args.touch, 'w') as file:
+                    print('...........Almost Done...........')
+                    file.write(refactored_code)
+                    print('Refactor complete!!!!!!!!!')
+                    return
+            else:
+                refactor_large_file(args.touch, agent)
+                return
+        except Exception as e:
+            print(f'An Error Occurred: {e}')
+
     if args.watch:
         changed_files_map = set()
         watch_directory(os.getcwd(), changed_files_map)
+          
+
+
+
 
 if __name__ == "__main__":
     main()
