@@ -1,0 +1,9 @@
+/__pycache__
+conf.js
+a.py
+env.py
+cli.spec
+/build
+refactorcli-installer.iss
+refactor-cli.spec
+/dist/cli.exe
