@@ -104,8 +104,9 @@ Log out and log back in, or source the file using:
 
 ```bash
 source ~/.bashrc 
-Verification:
+
 ```
+**Verification**:
 ```bash
 refactor-cli --help 
 ```
