@@ -55,7 +55,7 @@ refactor-cli touch <path_to_file>
 ```
 Replace <path_to_file> with the full path to the Python file you want to refactor.
 
-Installation (Linux)
+## Installation (Linux)
 1. Download the refactor-cli executable:
 
 Obtain the refactor-cli executable file (usually refactor-cli) from the release page of the project repository.
