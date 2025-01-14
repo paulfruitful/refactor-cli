@@ -55,6 +55,62 @@ refactor-cli touch <path_to_file>
 ```
 Replace <path_to_file> with the full path to the Python file you want to refactor.
 
+Installation (Linux)
+1. Download the refactor-cli executable:
+
+Obtain the refactor-cli executable file (usually refactor-cli) from the release page of the project repository.
+2. Install the executable:
+
+- Open a terminal as root or using sudo :
+
+```bash
+sudo su
+```
+ 
+- Move the refactor-cli executable to the /usr/local/bin directory:
+
+```bash
+mv refactor-cli /usr/local/bin/refactor-cli
+```
+- Make the executable file executable:
+
+```bash
+chmod +x /usr/local/bin/refactor-cli
+```
+3. **Set up Google API Key:**
+- Obtain an API Key:
+          - Visit [https://console.cloud.google.com/](https://www.google.com/url?sa=E&source=gmail&q=https://console.cloud.google.com/) and create or select a project.
+          - Enable Google AI Platform APIs.
+          - Create an API key under "Credentials".
+- Set the environment variable:
+Create a file named ```google_api_key.sh``` in your home directory (~/):
+
+```bash
+export GOOGLE_API_KEY="your_api_key_here"
+```
+Replace "your_api_key_here" with the actual API key.
+
+- Make the file executable:
+
+```bash
+chmod +x ~/google_api_key.sh
+```
+- Add the following line to your .bashrc or .zshrc file:
+
+```bash
+source ~/google_api_key.sh
+```
+Log out and log back in, or source the file using:
+
+```bash
+source ~/.bashrc 
+Verification:
+```
+```bash
+refactor-cli --help 
+```
+This should display the command-line help information if the installation was successful.
+
 ## Contributing
 We welcome contributions! Please follow these steps:
 
