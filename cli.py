@@ -120,38 +120,42 @@ def refactor_cli_ascii_art():
 Made By: @paulfruitful                                                              
     """
     print(ascii_art)
+
 def main():
     refactor_cli_ascii_art()
     parser = argparse.ArgumentParser(description="A CLI tool to watch file saves.")
-    parser.add_argument("watch", type=str, nargs='?', help="The directory to watch")
-    parser.add_argument('touch', type=str, nargs='?', help="To refactor a particular file")
+    subparsers = parser.add_subparsers(dest="command")
+
+    watch_parser = subparsers.add_parser("watch", help="The directory to watch")
+   
+    touch_parser = subparsers.add_parser("touch", help="To refactor a particular file")
+    touch_parser.add_argument("file", type=str, help="The file to refactor")
+
     args = parser.parse_args()
 
     
-    if args.watch:
+    if args.command=="watch":
         changed_files_map = set()
         watch_directory(os.getcwd(), changed_files_map)
-          
 
-
-    if args.touch:
+    elif args.command=="touch":
         try:
-            with open(args.touch, 'r') as change_file:
+            with open(args.file, 'r') as change_file:
                 language = change_file.name.split(".")[-1]
                 agent = create_refactor_agent()
-                print(f'.........Refactoring {args.touch}')
+                print(f'.........Refactoring {args.file}')
                 code = change_file.read()
                 refactor_code = agent({"code": code, "language": language})
                 refactored_code = clean_code(refactor_code)
 
-            if os.path.getsize(args.touch) < 200_000:
-                with open(args.touch, 'w') as file:
+            if os.path.getsize(args.file) < 200_000:
+                with open(args.file, 'w') as file:
                     print('...........Almost Done...........')
                     file.write(refactored_code)
                     print('Refactor complete!!!!!!!!!')
                     return
             else:
-                refactor_large_file(args.touch, agent)
+                refactor_large_file(args.file, agent)
                 return
         except Exception as e:
             print(f'An Error Occurred: {e}')
