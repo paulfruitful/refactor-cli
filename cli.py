@@ -123,9 +123,16 @@ Made By: @paulfruitful
 def main():
     refactor_cli_ascii_art()
     parser = argparse.ArgumentParser(description="A CLI tool to watch file saves.")
-    parser.add_argument("watch", type=str, help="The directory to watch")
-    parser.add_argument('touch', type=str, help="To refactor a particular file")
+    parser.add_argument("watch", type=str, nargs='?', help="The directory to watch")
+    parser.add_argument('touch', type=str, nargs='?', help="To refactor a particular file")
     args = parser.parse_args()
+
+    
+    if args.watch:
+        changed_files_map = set()
+        watch_directory(os.getcwd(), changed_files_map)
+          
+
 
     if args.touch:
         try:
@@ -148,11 +155,6 @@ def main():
                 return
         except Exception as e:
             print(f'An Error Occurred: {e}')
-
-    if args.watch:
-        changed_files_map = set()
-        watch_directory(os.getcwd(), changed_files_map)
-          
 
 
 
