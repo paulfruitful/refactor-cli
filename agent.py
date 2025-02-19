@@ -1,15 +1,92 @@
 import google.generativeai as genai
 import os
-from env import get_api_key
+from dotenv import load_dotenv
 
 
-def create_refactor_agent():
+def get_api_key():
+    load_dotenv()
     api_key = os.environ.get("GOOGLE_API_KEY")
     if not api_key:
-     print("Google API key not found in environment variables.")
-     return
-    else:
-      print("Google API key loaded successfully.")
+        raise ValueError("GOOGLE_API_KEY not found in environment variables")
+    return api_key
+
+def code_mapper_agent(inputs):
+    api_key=get_api_key()
+
+    genai.configure(api_key=api_key)
+    prompt=prompt = ("""
+    You are an expert code analyst specializing in creating comprehensive code maps. Analyze the provided code and create a detailed map that includes:
+
+    1. High-Level Overview:
+       - Main purpose and functionality
+       - Architecture patterns used
+       - Key components and their relationships
+
+    2. Detailed Structure:
+       - Function/method hierarchy and relationships
+       - Class inheritance and composition
+       - Module dependencies
+       - Data flow patterns
+
+    3. Code Quality Analysis:
+       - Potential bottlenecks
+       - Code complexity assessment
+       - Reusability opportunities
+       - Design pattern implementations
+
+    4. Documentation Status:
+       - Coverage of comments and documentation
+       - API documentation completeness
+       - Missing documentation areas
+
+    Format your response as a structured markdown document with sections and subsections.
+    Use diagrams notation (like mermaid) when appropriate to visualize relationships.
+    
+    Analyze the following code:
+    {code}
+    """).format(**inputs)
+    model = genai.GenerativeModel('gemini-2.0-flash-thinking-exp-1219')
+    response = model.generate_content(prompt)
+    return response.text
+
+
+def get_project_description_agent():
+    with open('project_desc.txt','w') as desc:
+     directory=os.listdir()
+     if "README.md" in directory:
+        with open("README.md", "r") as file:
+            readme_content = file.read()
+        return readme_content
+     for i in directory:
+        if os.path.isdir(i):
+            curr_dir=os.chdir(i)
+            for i in curr_dir:
+                if os.path.isdir(i):
+                    curr_dir=os.chdir(i)
+                    for i in curr_dir:
+                        if os.path.isdir(i):
+                            curr_dir=os.chdir(i)
+                            for i in curr_dir:
+                                if os.path.isdir(i):
+                                    curr_dir=os.chdir(i)
+                                    for i in curr_dir:
+                                        if os.path.isdir(i):
+                                            curr_dir=os.chdir(i)
+                                            for i in curr_dir:
+                                                if os.path.isdir(i):
+                                                    curr_dir=os.chdir(i)
+                                                    for i in curr_dir:
+                                                        if os.path.isdir(i):
+                                                            curr_dir=os.chdir(i)
+                                                            for i in curr_dir:
+                                                                code_map=code_mapper_agent(i)
+                                                                desc.write(code_map)
+    
+def create_readme_agent():
+ api_key=get_api_key()
+
+def create_refactor_agent():
+    api_key=get_api_key()
     genai.configure(api_key=api_key)
 
     def generate_refactored_code(inputs):
