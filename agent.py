@@ -50,7 +50,7 @@ def code_mapper_agent(inputs):
     return response.text
 
 
-def get_project_description_agent():
+"""def get_project_description_agent():
     with open('project_desc.txt','w') as desc:
      directory=os.listdir()
      if "README.md" in directory:
@@ -81,7 +81,7 @@ def get_project_description_agent():
                                                             for i in curr_dir:
                                                                 code_map=code_mapper_agent(i)
                                                                 desc.write(code_map)
-    
+   """ 
 def create_readme_agent():
  api_key=get_api_key()
 
